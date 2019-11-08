@@ -1,0 +1,70 @@
+\chapter{Descrizione tecnologie usate}
+	Nel seguente capitolo illustererò le varie metodologie e tecnologie utilizzate, con attenzione al frmework e le api.
+	\section{Ruby e Ruby on Rails} 
+	Ruby è un linguaggio di programmazione nato nel 1993 che, pur essendo ad oggetti, presenta alcune caratteristiche tipiche dei paradigmi imperativo e funzionale.
+	
+	Il paradigma ad oggetti di \textbf{Ruby} è puro, ossia ogni componente del linguaggio, dalle costanti numeriche alle classi, è un oggetto, e come tale può possedere metodi; a differenza dei linguaggi come C++ e derivati, tuttavia, gli oggetti in Ruby sono qualcosa di molto più dinamico, in quanto è possibile aggiungere o modificare metodi a run-time. Il tipo di un oggetto, perciò, non è definito tanto dalla classe che lo ha istanziato, quanto dall'insieme dei metodi che possiede, o dei messaggi a cui sa rispondere.
+	
+	In Ruby, dunque, è fondamentale il \textit{duck typing} (dall'inglese if it looks like a duck, and quacks like a duck, it must be a duck), ovvero il principio secondo il quale il comportamento di una funzione sui suoi argomenti non deve essere determinato dal tipo di questi (come accade in C++ e altri linguaggi staticamente tipizzati), bensì da quali messaggi essi sono in grado di gestire.
+	
+	Un'altra caratteristica fondamentale di Ruby è costituita dai cosiddetti blocchi, che sono sostanzialmente delle chiusure (ovvero funzioni dotate di ambiente), e che consentono di sostituire i cicli espliciti, frequenti nei linguaggi a basso livello, con l'utilizzo di iteratori, nascondendo così al chiamante i meccanismi interni del ciclo in questione.
+	\\\\
+	Ruby è il linguaggio del framework open source \textbf{Ruby on rails}, per applicazioni web. La sua architettura è una \textbf{MVC} (Model - view - controller). I suoi obiettivi sono la semplicità e la possibilità di 
+	Ruby on rails è distribuito attraverso \textbf{RubyGems}, l'unico canale ufficiale di distribuzione per librerie ed applicazioni Ruby.
+	
+	I principi guida di Ruby on Rails comprendono \textit{don't repeat yourself} e \textit{convention over configuration}.
+	
+	\textbf{Don't repeat yourself} significa che le definizioni devono essere poste una volta soltanto. Poiché Ruby On Rails è un framework \textit{full-stack}, i componenti sono integrati in modo tale che i collegamenti fra di essi non devono essere impostati manualmente. Ad esempio in Active Record, le definizioni delle classi non devono specificare i nomi delle colonne; Ruby può estrarli direttamente dal database, dunque riportarli anche nel programma sarebbe ridondante.
+	
+	\textbf{Convention over configuration} significa che il programmatore ha bisogno di metter mano alla configurazione soltanto per ciò che differisce dalle convenzioni. Ad esempio, se un modello è costituito dalla classe Post, la corrispondente tabella nel database deve chiamarsi posts, o altrimenti deve essere specificata manualmente.
+	
+	\section{Google calendar Api}
+	E' stato deciso a monte che il progetto fosse di tipo gestionale, come potevamo non includere il calendario di google?
+	
+	\textbf{Google calendar} è un  sistema calendari concepito da Google ed offre la possibilità creare più celandari, di condividerli e importarli da altri servizi, il che, calza a pennello con l'obbiettivo di \textit{Inline}, creare eventi e ottimizzare la gestione del tempo.
+
+	L'implementazione è fatta utilizzando la gemma \textit{googleauth}, si avrebbe potuto scegliere anche una soluzione di basso livello scrivendo le varie chiamate \textbf{HTTP} from scratch, ma si è preferito utilizzare una libreria che con poche chiamate fa il suo lavoro.
+	
+	L'applicazione dispone di un account di servizio in modo che ogni presente sul sito lo sia anche sul calendario. Diverso invece è per gli utenti: l'evento non viene aggiunto automaticamente al proprio calendario, ma è necessario cliccare sul link ipertestuale inserito nella room. Per semplicità si è evitato di incorporare evento ricorsivi nel calendario degli utenti.
+	
+	\section{Google e facebook oauth}
+	\textit{Facebook} e \textit{Google} mettono a disposizione le proprie API per poter ottenere le autorizzazioni per effettuare sign-in o sign-up. E' neccessario essere iscritto ad entrambi i siti e ottenere un account sviluppatore.
+	
+	Dal 2018 Facebook ha introdotto il vincolo  per l'utilizzo dell'api. Ogni applicazione che utilizzi tali servizi neccessita di un certificato \textit{SSL}. Per superare questo problema in fase di development abbiamo dovuto utilizzare un nostro certificato. E' doveroso bootare il server con il comando:
+	\begin{lstlisting}
+		rails s -b 'ssl://127.0.0.1:3000?key=localhost.key&cert=localhost.crt
+	\end{lstlisting}
+	
+	\section{Mapbox}
+	Mapbox è uno dei più grandi fornitori di mappe online, abbiamo preferito l'utilizzo di questa API rispetto a \textit{Google maps} poichè già molto servizi erano dipendenti dal grande colosso americano. In caso di guasto ci sarebbero stati molti problemi. L'api è stata implementata solo a livello di front-end, tramite librerie \textit{JQuery} e \textit{Javascript}. Per ottenere la chiave per usare questo applicativo abbiamo bisogno di un account sviluppatore nel sito di mapbox.
+	
+	Nel sito è presente la mappa nella dashboard, dove presenta le room vicine alla posizione ricercata o a quella attuale, ottenuta tramite GPS, nella creazione della room che però, a differenza della precedente, è nascosta all'utente finale. Questo perchè è necessario che sia presente per far funzionare il ricercatore di località Mapbox. Ed infine, è presente nelle stanze che hanno una posizione, nella colonna sinistra. 
+	
+	\section{Mailboxer}
+	Mailboxer è una gemma Rails che fa parte del framework \textit{social stream} per la creazione di social network. È un sistema di messaggistica generico che permette di rendere messaggiabile qualsiasi modello, dotandolo di alcuni strumenti versatili. Con Mailboxer, puoi creare conversazioni con uno o più destinatari e notificare via e-mail. È anche possibile inviare messaggi tra diversi modelli e aggiungere allegati. In poche parole, è lo strumento che ci ha permesso di creare i messaggi privati all'interno della piattaforma.
+	
+	\section{Bootstrap}
+	Bootstrap è una raccolta di librearia per la creazione di siti e applicazione per il web. E' stata sviluppata presso \textit{Twitter} come un framework che uniformasse i vari componenti che ne realizzavano l'interfaccia web, dato che la presenza di diverse libreria aveva portato ad incoerenze ed eleveti oneri di manutenzione.
+	
+	Continene modelli basati su \textit{CSS} e \textit{HTML} per l'interfaccia grafica, contenendo quindi, bottoni, moduli e pulsanti di navigazioni. E' stato incluso con la gemma \textit{bootstrap} e poi chiamato tramite \textit{SASS}.
+	
+	\section{Ice cube}
+	Ice cube è una gemma di rails che gestire eventi ripetuti facilmente. L'API è modellata sugli eventi iCalendar in una piacevole sinstassi di Ruby. Il potere sta nella capacità di specificare regole multiple e fare in modo che Ice cube capisce rapidamente l'evento schedulato cada in una determinata data o in quali orari si verifica.
+	
+	E' stata presentata in un tutorial di \textit{Go rails}, un famoso canale che porta notizie sul framework in questione, dove ne mostrava l'utilizzo.
+	
+	\section{Strumenti minori}
+	Altri strumenti che non \textit{meritano} una sezione a parte, poichè non hanno avuto un ruolo fondamentale nello sviluppo del sito sono: 
+	\begin{itemize}	
+		\item \textbf{Paperclip}, una gemma utilizzata per ritagliare gli avatar delle Room.
+		\item \textbf{Bcrypt}, una gemma utilizzata per encryptare le password degli utenti in fase di creazione
+		\item \textbf{Devise invitable}, fa parte del pacchetto devise e serve per invitare persone via mail
+		\item \textbf{Friendly ID}, genera un hash e lo inserisce al posto dell'ID utente e delle rooms, per questioni di sicurezza.
+	\end{itemize}
+
+	\section{Metodologie usate}
+	Nello sviluppo dell'applicazione sono stati utilizzati diversi strumenti. Il principale è stato \textit{Git-Hub}, un famoso sito per sviluppatori comprato di recente dalla \textit{Microsoft}. Ci ha permesso di essere sempre aggiornato con il lavoro degli altri componento del team. 
+	
+	Io, personalmente, ho utilizzato Visual studio code della \textit{Microsoft}, come editor di testo. Sebbene sia uno strumento pesanto, mi ha aiutato molto alla stesura di un codice pulito e facile da legge.
+	
+	E' stato utilizzato uno sito esterno, \textit{Taiga}, il tracking delle user stories e per gli sprint finali. E' stato lo strumento che ci ha permesso di dividere il lavoro per quattro persone in modo equivalente, sia per difficoltà che lungheza.
