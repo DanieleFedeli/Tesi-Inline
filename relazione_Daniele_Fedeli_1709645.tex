@@ -2,7 +2,7 @@
 % !TeX program = pdflatex
 % !TeX spellcheck = it_IT
 
-\documentclass[Lau,binding=0.6cm]{sapthesis}
+\documentclass[Lau,binding=0.6cm,noexaminfo,italian]{sapthesis}
 
 \usepackage{microtype}
 \usepackage[italian]{babel}
@@ -35,7 +35,6 @@
 \advisor{Prof. Leonardo Querzoni}
 
 \authoremail{fedelidaniele.96@gmail.com}
-
 \versiondate{\today}
 
 %Used for code
@@ -84,12 +83,21 @@
 	\include{Capitolo4}
 	\include{capitolo5}
 	\include{capitolo6}
+	\include{capitolo7}
 	
+	\chapter*{Bibliografia}
+	\begin{itemize}
+		\item M. Hartl, Ruby on Rails tutorial, WordlBridge Education.
+		\item G. De Giacomo, Dispense del corso Progettazione del software.
+		\item M. Lenzerini, Dispense del corso Basi di Dati.
+		\item D. Chelimsky, D. Astels. The RSpec Book: Behaviour-Driven Development with RSpec, Cucumber, and Friends.
+		\item https://www.mvmnet.com/it/ssl, Certificato SSL
+		\item Stackoverflow
+	\end{itemize}
 	\backmatter
 	%bibliography
 	\cleardoublepage
 	\phantomsection
-	\bibliographystyle{sapthesis} % BibTeX style
-	\bibliography{bibliography} % BibTeX database without .bib extension
-	
+
+
 \end{document}

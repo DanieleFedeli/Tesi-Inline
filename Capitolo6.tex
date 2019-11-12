@@ -7,3 +7,96 @@
 	\begin{lstlisting}
 		sudo apt-get update && sudo apt-get install build-essential -y
 	\end{lstlisting}
+	
+	Successivamente, dobbiamo scaricare la cartella che contiene il software. E' necessario avere git installato nel proprio sistema operativo, se non lo è al momento, bisogna scrivere nel terminale:
+	\begin{lstlisting}
+		sudo apt-get update && sudo apt-get install git -y
+	\end{lstlisting}
+	
+	Dopociò, bisogna effettuare il clone della cartella e abbiamo due alternative: Scaricarla da git attraverso il link: https://github.com/Mattens15/Inline-LASESI, oppure da terminale digitare:
+	\begin{lstlisting}
+		git clone https://github.com/Mattens15/Inline-LASESI
+	\end{lstlisting}
+	
+	Adesso, in ordine, scrivere i seguenti comandi dal terminale per installare le gemme e avviare il server di rails.
+	\begin{lstlisting}
+		cd Inline-LASESI
+		bin/bundle install
+		bin/rake db:create
+		bin/rails s
+	\end{lstlisting}
+	
+	\section[Attrvaverso unit e integration testing]{Testing}
+	Il testing è una pratica fondamentale che si svolge dopo lo stesura del codice. Serve a prevenire e correggere importanti bug che minano la sicurezza dell'applicativo.
+	Ci affidiamo a due strumenti forniti dalla gemme di RoR, \textbf{Rspec} e \textbf{Cucumber}.
+	
+	Il periodo di testing è durato all'incirca 1 settimana, attraverso il quale sono stati riscontrati errori di sicurezza nella validazione dell'utente. Una qualsiasi persona, con una POST poteva tranquillamente validare un utente.
+	
+	\subsection{Unit test}
+	In \textit{Ingegneria del software}, per unit test si intede l'attività di testing di singole unità di software. Per unità di intende normalmente il minimo componente di un programma dotato di funzionamento autonomo.
+	
+	In Inline i test di unità sono stati svolti con \textbf{Rspec} e si trovano in \texttt{./spec/}. Quindi ogni controller, model e view è stata testata con Unit test.
+	
+	
+	Prendiamo per esempio il codice di test del controller powers
+	
+	 \texttt{file ./spec/controller/powers\_controller\_spec.rb}
+	\begin{lstlisting}
+		RSpec.describe PowersController, type: :controller do
+			before(:each) do
+				@owner = FactoryBot.create(:owner)
+				@user = FactoryBot.create(:user)
+				@room = @owner.rooms.create!(attributes_for(:valid_room))
+			end
+			
+			describe "POST #create as room host" do
+				it "returns http success" do
+					allow(controller).to receive(:current_user).and_return(@owner)
+			
+					expect{post :create, 
+						   params: {room_id: @room.id, power: {user_id: @user.username}}}.to change {@user.powers.count}.by(1)
+					expect(response).to redirect_to(edit_room_path(@room.hash_id))
+				end
+			end
+			
+			//Other tests
+		end
+	\end{lstlisting}
+	
+	Dalla prima riga, capiamo che si sta testando un controller, in particolare PowersController.
+	
+	\texttt{before(:each) do} implica che prima di ogni test descritto all'interno di questa funziona crei prima un propretario, un utente e una stanza.
+	
+	Nel test soprastante stiamo testando il fatto che un utente che abbia creato la stanza in precedenza abbia la possibilità di aggiungere altri admin. Abbiamo supposto che il current\_user fosse il proprietario.
+	
+	Nell' expectation abbiamo effettuato una post, nei parametri è presente l'id della room e l'id dell'utente che vogliamo far diventare admin.
+	
+	Alla fine ci aspettiamo che il controller reindirizza nel percordo edit\_room\_path.
+	
+	\subsection{Integration test}
+	
+	I test di integrazione sono stati svolti con Cucumber, un tool che permette di effettuare BDD, \textit{Behavior driven development}. Questi tests permettono di verificare l'integratezza e l'insieme delle parti, testate nel test di unità, quando devono compiere un'operazione. Queste operazioni sono per noi le \textit{User stories} descritte nel capitolo 2.
+			
+	I test descritti da cucumber si trovano in \texttt{./features}. La peculiarità di questo strumento è quella di scrivere test in linguaggio di alto livello, quasi parlato; Successivamente, un modulo in linguaggio ruby preleverà gli step con delle espressioni regolari e effettuare dei test.
+	
+	Prendiamo per esempio il test della user story 18.
+	\\
+	\texttt{As a User I want to use Mapbox so that i can see rooms in a certain location.}\\
+	\texttt{file PASSED\_find\_room\_by\_location.feature}
+	\begin{lstlisting}
+		@javascript
+		Scenario:
+			Given I am a registered user
+			And I log in
+			When I create a room
+			And I visit dashboard
+			And I fill Search with Via del babuino
+			And I pick the first one
+			Then I should see marker
+	\end{lstlisting}
+	
+	\texttt{@Javascript} indica al motore che esegue i test che avrà bisogno dell'appoggio di Javascript nel browser per far sì che i test vengano superati.
+	
+	\textit{Given}, \textit{When} e \textit{Then} rappresentano le parole chiave per i test. In ordine raffigurano il preambolo dello scenario, poi l'azione e alla fine la conseguenza.
+	
+	In questo caso: \textbf{Dato} che sono registrato e loggato, \textbf{quando} creo una stanza e visito la dashboard e scrivo \textit{Via del Babuino} nella barra di ricerca,\textbf{ dovrei} vedere un marker sulla mappa.
